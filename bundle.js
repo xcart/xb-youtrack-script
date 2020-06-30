@@ -1,6 +1,6 @@
 (function() {
     window.XbYoutrack = {
-      version: "0.2.1",
+      version: "0.2.2",
       renderUi: renderUi,
       token: null
     }
@@ -56,6 +56,7 @@
     }
 
     function gatherAttributeFields() {
+        var startDate = getStartDate();
         var verificationDate = getVerificationDate();
         var dueDate = getDueDate();
         var estimation = getEstimation();
@@ -65,6 +66,10 @@
             'State ' + getState(),
             'Client ' + getClient()
         ];
+
+        if (startDate) {
+            fields.push('Start Date ' + startDate);
+        }
 
         if (verificationDate) {
             fields.push('Verification date ' + verificationDate);
@@ -102,8 +107,55 @@
         return matches && matches.length > 1 ? matches[1] : input.value;
     }
 
-    function getDescription() {
-        return "";
+    async function getDescription() {
+        let content = await retrieveSpecContent(getSpecLink())
+        let spec = filterConstraints(content)
+        let markdown = convertToMarkdown(spec)
+        return markdown
+    }
+
+    function retrieveSpecContent(url) {
+        return new Promise((resolve, reject) => {
+            if (typeof GM_xmlhttpRequest === 'undefined') {
+                reject(null)
+            }
+            
+            GM_xmlhttpRequest({
+                method: "GET",
+                url: url,
+                onload: function(response) {
+                    let doc = document.createElement('html')
+                    doc.innerHTML = response.responseText
+
+                    let spec = doc.querySelector('table.MessageBorder td:first-child')
+                    resolve(spec)
+                }
+            })
+        })
+    }
+
+    function filterConstraints(element) {
+        var result = document.createElement('div')
+        var currentIndex = 0
+        var current = element.childNodes[currentIndex]
+        const headings = ["H1","H2","H3","H4","H5","H6"]
+        const isConstraintHeading = (elem) => { return elem.textContent.toLowerCase().includes('constraints') && headings.includes(elem.tagName) }
+
+        while (current && !isConstraintHeading(current)) {
+            result.appendChild(current.cloneNode(true))
+            currentIndex++
+            current = element.childNodes[currentIndex]
+        }
+
+        return result
+    }
+
+    function convertToMarkdown(element) {
+        if (typeof window.TurndownService !== "undefined") {
+            var converter = window.TurndownService()
+            return converter.turndown(element)
+        }
+        return element.innerText
     }
 
     function getSpecLink() {
@@ -143,6 +195,11 @@
             default:
                 return 'Open';
         }
+    }
+    
+    function getStartDate() {
+        var input = document.getElementById('date_start-data');
+        return input ? formatDate(input.value) : null;
     }
 
     function getDueDate() {
