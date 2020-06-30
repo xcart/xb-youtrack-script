@@ -4,7 +4,7 @@
       token: null
     }
     
-    var event = new CustomEvent('xbYoutrack.loaded', { instance: window.XbYoutrack });
+    var event = new CustomEvent('xbYoutrack.loaded', { detail: window.XbYoutrack });
     document.dispatchEvent(event);
     
     function renderUi(token) {
