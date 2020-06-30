@@ -1,6 +1,6 @@
 (function() {
     var XbYoutrack = {
-      version: "0.2.2",
+      version: "0.2.3",
       renderUi: renderUi,
       token: null
     }
@@ -165,7 +165,8 @@
     }
 
     function getSpecLink() {
-        return specLink ? "Specification: " + getSpecUrl() : "";
+        var specLink = getSpecUrl()
+        return specLink ? "Specification: " + specLink : "";
     }
 
     function getExternalLinksText() {
