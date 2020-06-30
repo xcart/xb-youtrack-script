@@ -1,9 +1,11 @@
 (function() {
     window.XbYoutrack = {
-      renderUi: renderUi
+      renderUi: renderUi,
+      token: null
     }
     
-    function renderUi() {
+    function renderUi(token) {
+        window.XbYoutrack.token = token;
         var wrapper = document.createElement("td");
         wrapper.style.paddingLeft = '30px';
         var btn = document.createElement("input");
@@ -195,7 +197,7 @@
 
         xhr.open("POST", "https://xcart.myjetbrains.com/youtrack/api/admin/customFieldSettings/bundles/enum/77-4/values?$top=-1&fields=$type,archived,assembleDate,avatarUrl,color%28id%29,description,fullName,hasRunningJob,id,isResolved,issueRelatedGroup%28icon%29,localizedName,login,name,ordinal,owner%28id,login,ringId%29,releaseDate,released,ringId,showLocalizedNameInAdmin,teamForProject%28ringId%29,usersCount");
         xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.setRequestHeader("Authorization", "Bearer perm:ZGFlbW9z.UmVwb3J0cw==.2E6MQapznV1U8QsOJ3OuzGAYGi56vs");
+        xhr.setRequestHeader("Authorization", "Bearer " + window.XbYoutrack.token);
         xhr.setRequestHeader("Accept", "*/*");
         xhr.setRequestHeader("Cache-Control", "no-cache");
         xhr.setRequestHeader("cache-control", "no-cache");
