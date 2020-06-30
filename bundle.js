@@ -1,5 +1,6 @@
 (function() {
     window.XbYoutrack = {
+      VERSION: 0.2.1,
       renderUi: renderUi,
       token: null
     }
