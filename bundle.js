@@ -1,17 +1,16 @@
 (function() {
-    window.XbYoutrack = {
+    var XbYoutrack = {
       version: "0.2.2",
       renderUi: renderUi,
-      token: null,
-      fetch: null
+      token: null
     }
     
-    var event = new CustomEvent('xbYoutrack.loaded', { detail: window.XbYoutrack });
+    var event = new CustomEvent('xbYoutrack.loaded', { detail: XbYoutrack });
     document.dispatchEvent(event);
     
     function renderUi(options) {
-        window.XbYoutrack.token = options.token;
-        window.XbYoutrack.fetch = options.fetch;
+        XbYoutrack.token = options.token;
+        XbYoutrack.fetch = options.fetch;
         var wrapper = document.createElement("td");
         wrapper.style.paddingLeft = '30px';
         var btn = document.createElement("input");
@@ -110,7 +109,7 @@
     }
 
     async function getDescription() {
-        let content = await retrieveSpecContent(getSpecLink())
+        let content = await retrieveSpecContent(getSpecUrl())
         let spec = filterConstraints(content)
         let markdown = convertToMarkdown(spec)
         return markdown
@@ -118,11 +117,11 @@
 
     function retrieveSpecContent(url) {
         return new Promise((resolve, reject) => {
-            if (!window.XbYoutrack.fetch) {
+            if (typeof XbYoutrack.fetch === 'undefined') {
                 reject(null)
             }
             
-            window.XbYoutrack.fetch({
+            XbYoutrack.fetch({
                 method: "GET",
                 url: url,
                 onload: function(response) {
@@ -159,10 +158,14 @@
         }
         return element.innerText
     }
+    
+    function getSpecUrl() {
+        var specLink = document.querySelector('a[href*="area=projects&target=specification&"]');
+        return specLink.href + "&read_only_mode=yes"
+    }
 
     function getSpecLink() {
-        var specLink = document.querySelector('a[href*="area=projects&target=specification&"]');
-        return specLink ? "Specification: " + specLink.href + "&read_only_mode=yes" : "";
+        return specLink ? "Specification: " + getSpecUrl() : "";
     }
 
     function getExternalLinksText() {
@@ -260,7 +263,7 @@
 
         xhr.open("POST", "https://xcart.myjetbrains.com/youtrack/api/admin/customFieldSettings/bundles/enum/77-4/values?$top=-1&fields=$type,archived,assembleDate,avatarUrl,color%28id%29,description,fullName,hasRunningJob,id,isResolved,issueRelatedGroup%28icon%29,localizedName,login,name,ordinal,owner%28id,login,ringId%29,releaseDate,released,ringId,showLocalizedNameInAdmin,teamForProject%28ringId%29,usersCount");
         xhr.setRequestHeader("Content-Type", "application/json");
-        xhr.setRequestHeader("Authorization", "Bearer " + window.XbYoutrack.token);
+        xhr.setRequestHeader("Authorization", "Bearer " + XbYoutrack.token);
         xhr.setRequestHeader("Accept", "*/*");
         xhr.setRequestHeader("Cache-Control", "no-cache");
         xhr.setRequestHeader("cache-control", "no-cache");
