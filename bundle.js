@@ -2,14 +2,16 @@
     window.XbYoutrack = {
       version: "0.2.2",
       renderUi: renderUi,
-      token: null
+      token: null,
+      fetch: null
     }
     
     var event = new CustomEvent('xbYoutrack.loaded', { detail: window.XbYoutrack });
     document.dispatchEvent(event);
     
-    function renderUi(token) {
-        window.XbYoutrack.token = token;
+    function renderUi(options) {
+        window.XbYoutrack.token = options.token;
+        window.XbYoutrack.fetch = options.fetch;
         var wrapper = document.createElement("td");
         wrapper.style.paddingLeft = '30px';
         var btn = document.createElement("input");
@@ -116,11 +118,11 @@
 
     function retrieveSpecContent(url) {
         return new Promise((resolve, reject) => {
-            if (typeof GM_xmlhttpRequest === 'undefined') {
+            if (!window.XbYoutrack.fetch) {
                 reject(null)
             }
             
-            GM_xmlhttpRequest({
+            window.XbYoutrack.fetch({
                 method: "GET",
                 url: url,
                 onload: function(response) {
