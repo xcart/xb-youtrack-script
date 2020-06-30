@@ -21,8 +21,8 @@
         findButtonPlacement().append(wrapper);
     }
 
-    function onClick(event) {
-        var info = gatherInfoObject();
+    async function onClick(event) {
+        var info = await gatherInfoObject();
         var href = convertToUrl(info);
         createClientValue(function (){
             window.open(href);
@@ -33,11 +33,11 @@
         return document.querySelector('input[value="Update"]').closest('tr');
     }
 
-    function gatherInfoObject() {
+    async function gatherInfoObject() {
         var info = {
             project: "WD",
             summary: getSummary(),
-            description: getDescription(),
+            description: await getDescription(),
         };
 
         var params = new URLSearchParams(info);
