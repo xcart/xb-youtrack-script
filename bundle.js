@@ -1,6 +1,6 @@
 (function() {
     var XbYoutrack = {
-      version: "0.2.3",
+      version: "0.2.4",
       renderUi: renderUi,
       token: null
     }
@@ -109,6 +109,8 @@
     }
 
     async function getDescription() {
+        // TODO: Figure out how to provide
+        return ""
         let content = await retrieveSpecContent(getSpecUrl())
         let spec = filterConstraints(content)
         let markdown = convertToMarkdown(spec)
