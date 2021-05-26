@@ -1,6 +1,6 @@
 (function() {
     var XbYoutrack = {
-      version: "0.2.4",
+      version: "0.2.5",
       renderUi: renderUi,
       token: null
     }
@@ -201,7 +201,7 @@
                 return 'Completed';
             case 'S':
             default:
-                return 'Open';
+                return 'Scheduled';
         }
     }
     
